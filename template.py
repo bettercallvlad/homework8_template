@@ -4,7 +4,7 @@ import sys
 
 def add_new_user(name: str, phone: str, filename: str):
     """
-    Добавление нового пользователя.
+    2 - Добавление нового пользователя.
     """
     new_line = '\n' if read_all(filename) != "" else ''
     with open(filename, "a", encoding="utf-8") as file:
@@ -13,7 +13,7 @@ def add_new_user(name: str, phone: str, filename: str):
 
 def read_all(filename: str) -> str:
     """
-    Возвращает все содержимое телефонной книги.
+    1 - Возвращает все содержимое телефонной книги.
     """
     with open(filename, "r", encoding="utf-8") as file:
         return file.read()
@@ -21,7 +21,7 @@ def read_all(filename: str) -> str:
 
 def search_user(filename: str, data: str) -> str:
     """
-    Поиск записи по критерию data.
+    3- Поиск записи по критерию data.
     """
     with open(filename, "r", encoding="utf-8") as file:
         list_1 = file.read().split("\n")
@@ -32,26 +32,53 @@ def search_user(filename: str, data: str) -> str:
     return "\n".join(result)
 
 
+def copy_data(source: str, dest: str, num_row: int):
+    """
+    4 - Функция для копирования указанной строки из одного файла в другой
+    source: str     - имя исходного файла
+    dest: str       - имя файла куда переносим
+    num_row: int    - номер копируемой строки
+    """
+    with open(source, "r", encoding="utf-8") as file:
+        list_1 = file.read().split("\n")
+    if num_row > len(list_1):
+        print (f'В фале нет строки {num_row}')
+    else:
+        with open(dest, "w", encoding="utf-8") as file:
+            copy_line = list_1[num_row]
+            file.write(f"{copy_line}")
+            print ('Строка скопирована в новый файл')
+
 def transfer_data(source: str, dest: str, num_row: int):
     """
-    Функция для переноса указанной строки из одного файла
-    в другой
-    source: str - имя исходного файла
-    dest: str - имя файла куда переносим
-    num_row: int - номер переносимой строки
+    5 - Функция для переноса указанной строки из одного файла в другой
+    source: str     - имя исходного файла
+    dest: str       - имя файла куда переносим
+    num_row: int    - номер переносимой строки
     """
-    pass
-
+    with open(source, "r", encoding="utf-8") as file:   # забираем содержимое из файла-источника
+        list_1 = file.read().split("\n")
+    if num_row > len(list_1):
+        print (f'В фале нет строки {num_row}')
+        return
+    with open(source, 'w', encoding="utf-8") as file:                     # запись в файл-источник без переносимой строки
+        transfer_line = list_1.pop(num_row)
+        file.write("\n".join(list_1))
+    with open(dest, "w", encoding="utf-8") as file:     # запись в файл-приемник переносимую строку
+        file.write(f"{transfer_line}")
+        print ('Строка перенесена в новый файл')
 
 INFO_STRING = """
-Выберите ркжим работы:
+Выберите режим работы:
 1 - вывести все данные
 2 - добавление нового пользователя
 3 - поиск
-4 - перенос записи в другой файл
+4 - Копирование записи в другой файл
+5 - Перенос записи в другой файл
 """
 
 file = "Text.txt"
+file_dest = "Text_dest.txt"
 
 if file not in os.listdir():
     print("указанное имя файла отсутсвует")
@@ -70,5 +97,10 @@ while True:
         data = input("Введите значение: ")
         print(search_user(file, data))
     elif mode == 4:
-        # Тут нужно вызвать функцию с аргументами
-        pass
+        row_num = int(input("Какую строку нужно скопировать: "))
+        copy_data(file, file_dest, row_num)
+    elif mode == 5:
+        row_num = int(input("Какую строку нужно перенести: "))
+        transfer_data(file, file_dest, row_num)
+    else:
+        exit()
