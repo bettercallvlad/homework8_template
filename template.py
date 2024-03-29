@@ -44,9 +44,9 @@ def copy_data(source: str, dest: str, num_row: int):
     if num_row > len(list_1):
         print (f'В фале нет строки {num_row}')
     else:
-        with open(dest, "a", encoding="utf-8") as file:
-            transfer_line = list_1[num_row]
-            file.write(f"{transfer_line}")
+        with open(dest, "w", encoding="utf-8") as file:
+            copy_line = list_1[num_row]
+            file.write(f"{copy_line}")
             print ('Строка скопирована в новый файл')
 
 def transfer_data(source: str, dest: str, num_row: int):
@@ -56,16 +56,17 @@ def transfer_data(source: str, dest: str, num_row: int):
     dest: str       - имя файла куда переносим
     num_row: int    - номер переносимой строки
     """
-    with open(source, "r", encoding="utf-8") as file:
+    with open(source, "r", encoding="utf-8") as file:   # забираем содержимое из файла-источника
         list_1 = file.read().split("\n")
-    print(list_1)
     if num_row > len(list_1):
         print (f'В фале нет строки {num_row}')
-    else:
-        with open(dest, "a", encoding="utf-8") as file:
-            transfer_line = list_1[num_row]
-            file.write(f"{transfer_line}")
-            print ('Строка скопирована в новый файл')
+        return
+    with open(source, 'w', encoding="utf-8") as file:                     # запись в файл-источник без переносимой строки
+        transfer_line = list_1.pop(num_row)
+        file.write("\n".join(list_1))
+    with open(dest, "w", encoding="utf-8") as file:     # запись в файл-приемник переносимую строку
+        file.write(f"{transfer_line}")
+        print ('Строка перенесена в новый файл')
 
 INFO_STRING = """
 Выберите режим работы:
@@ -101,3 +102,5 @@ while True:
     elif mode == 5:
         row_num = int(input("Какую строку нужно перенести: "))
         transfer_data(file, file_dest, row_num)
+    else:
+        exit()
