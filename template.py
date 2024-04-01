@@ -1,6 +1,9 @@
 import os
 import sys
 
+with open("Text.txt", 'a') as file:
+    file.close()
+
 
 def add_new_user(name: str, phone: str, filename: str):
     """
@@ -40,8 +43,16 @@ def transfer_data(source: str, dest: str, num_row: int):
     dest: str - имя файла куда переносим
     num_row: int - номер переносимой строки
     """
-    pass
-
+    num_row = int(num_row)
+    with open(source, "r", encoding="utf-8") as file:
+         lines = file.readlines()
+         if 0 < num_row <= len(lines):
+             line_to_copy = lines[num_row - 1]
+             with open(dest, 'w', encoding="utf-8") as file_2:
+                 file_2.write(line_to_copy)
+         else:
+             print("Некорректный номер строки")
+            
 
 INFO_STRING = """
 Выберите ркжим работы:
@@ -52,7 +63,7 @@ INFO_STRING = """
 """
 
 file = "Text.txt"
-
+file_2 ='NewText.txt'
 if file not in os.listdir():
     print("указанное имя файла отсутсвует")
     sys.exit()
@@ -71,4 +82,8 @@ while True:
         print(search_user(file, data))
     elif mode == 4:
         # Тут нужно вызвать функцию с аргументами
-        pass
+        num_row = int(input("Введите номер строки: "))
+        transfer_data(file, file_2, num_row)
+
+
+
