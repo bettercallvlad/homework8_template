@@ -40,7 +40,16 @@ def transfer_data(source: str, dest: str, num_row: int):
     dest: str - имя файла куда переносим
     num_row: int - номер переносимой строки
     """
-    pass
+
+    with open(source, 'r', encoding='utf-8') as file1:
+        lines = file1.readlines()
+        if 1 <= num_row <= len(lines):
+            row_to_transfer = lines[num_row - 1]
+            with open(dest, 'a', encoding='utf-8') as file2:
+                file2.write(row_to_transfer)
+            print(f"Строка {num_row} из {source} успешно перенесена в {dest}.")
+        else:
+            print(f"Номер строки {num_row} выходит за пределы диапазона строк в {source}.")
 
 
 INFO_STRING = """
@@ -71,4 +80,7 @@ while True:
         print(search_user(file, data))
     elif mode == 4:
         # Тут нужно вызвать функцию с аргументами
-        pass
+        source_file = "source.txt"
+        destination_file = "dest.txt"
+        num_row = int(input("Введите номер строки для переноса: "))
+        transfer_data(source_file, destination_file, num_row)
